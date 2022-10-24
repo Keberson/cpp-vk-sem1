@@ -19,9 +19,6 @@ class Matrix {
     unsigned getRows() const;
     unsigned getCols() const;
 
-    void setRows(unsigned rows);
-    void setCols(unsigned cols);
-
     Vector* getRow(unsigned row);
     Vector* getCol(unsigned col);
     Vector* getDiag();

@@ -161,5 +161,7 @@ std::ostream &operator<<(std::ostream &out, const Vector &item) {
 }
 
 Vector::~Vector() {
-    delete[] _vector;
+    if (_len != 0) {
+        delete[] _vector;
+    }
 }

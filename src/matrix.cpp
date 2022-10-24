@@ -79,14 +79,6 @@ unsigned Matrix::getCols() const {
     return _cols;
 }
 
-void Matrix::setRows(unsigned rows) {
-    _rows = rows;
-}
-
-void Matrix::setCols(unsigned cols) {
-    _cols = cols;
-}
-
 Vector* Matrix::getRow(unsigned row) {
     auto *result = new Vector(_cols, false);
 
