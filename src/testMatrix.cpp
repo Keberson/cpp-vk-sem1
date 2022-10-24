@@ -8,13 +8,13 @@ class MatrixClass : public testing::Test {
     Vector *_vectorVert;
     Vector *_vectorHoriz;
 
-    void SetUp() {
+    MatrixClass() {
         _matrix = new Matrix(3, 3, {1, 2, 3, 4, 6, 6, 7, 8, 9});
         _vectorVert = new Vector({1, 2, 3}, true);
         _vectorHoriz = new Vector({1, 2, 3}, false);
     }
 
-    void TearDown() {
+    ~MatrixClass() {
         delete _matrix;
         delete _vectorVert;
         delete _vectorHoriz;
@@ -259,7 +259,8 @@ TEST_F(MatrixClass, subOnColVector) {
 
 TEST_F(MatrixClass, composElemMatrix) {
     std::stringstream str;
-    Matrix *tmp = *_matrix & *_matrix;
+    Matrix on(*_matrix);
+    Matrix *tmp = *_matrix & on;
 
     str << *(tmp);
 
@@ -291,7 +292,6 @@ TEST_F(MatrixClass, composMatrixVectorVert) {
 }
 
 TEST_F(MatrixClass, composMatrixVectorHoriz) {
-    std::stringstream str;
     Matrix *tmp = *_matrix * *_vectorHoriz;
 
     EXPECT_EQ(nullptr, tmp);

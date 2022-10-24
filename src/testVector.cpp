@@ -7,12 +7,12 @@ class VectorClass : public testing::Test {
     Vector *_vectorVert;
     Vector *_vectorHoriz;
 
-    void SetUp() {
+    VectorClass() {
         _vectorVert = new Vector({1, 2, 3}, true);
         _vectorHoriz = new Vector({1, 2, 3}, false);
     }
 
-    void TearDown() {
+    ~VectorClass() {
         delete _vectorVert;
         delete _vectorHoriz;
     }
@@ -116,7 +116,8 @@ TEST_F(VectorClass, subOnIndexNumb) {
 
 TEST_F(VectorClass, composElemVector) {
     std::stringstream str;
-    Vector *tmp = *_vectorHoriz & *_vectorHoriz;
+    Vector on(*_vectorHoriz);
+    Vector *tmp = *_vectorHoriz & on;
 
     str << *(tmp);
 
