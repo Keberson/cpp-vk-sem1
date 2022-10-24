@@ -13,6 +13,7 @@ Vector::Vector(unsigned int len, bool isVertical) {
 }
 
 Vector::Vector(const Vector &old) {
+    _vector = nullptr;
     *this = old;
 }
 
@@ -68,6 +69,8 @@ Vector *Vector::sumOn(int index, double numb) const {
 
     auto *result = new Vector(_len, _isVertical);
 
+    *result = *this;
+
     (*result)[index] = _vector[index] + numb;
 
     return result;
@@ -93,6 +96,8 @@ Vector *Vector::subOn(int index, double numb) const {
     }
 
     auto *result = new Vector(_len, _isVertical);
+
+    *result = *this;
 
     (*result)[index] = _vector[index] - numb;
 
@@ -129,7 +134,8 @@ double &Vector::operator[](unsigned int index) const {
 
 Vector &Vector::operator=(const Vector &a) {
     if (&a != this) {
-        delete[] _vector;
+        if (_len != 0)
+            delete[] _vector;
 
         _len = a.getLen();
         _isVertical = a.getVerticalState();
@@ -145,7 +151,10 @@ Vector &Vector::operator=(const Vector &a) {
 
 std::ostream &operator<<(std::ostream &out, const Vector &item) {
     for (unsigned i = 0; i < item._len; ++i) {
-        out << item[i] << (item._isVertical ? '\n' : ' ');
+        out << item[i];
+        if (i != item._len - 1) {
+            out << (item._isVertical ? '\n' : ' ');
+        }
     }
 
     return out;

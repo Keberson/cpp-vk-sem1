@@ -20,18 +20,17 @@ Matrix::Matrix(unsigned int rows, unsigned int cols) {
     }
 }
 
-Matrix::Matrix(const Matrix &old) {
+Matrix::Matrix(const Matrix &old) : Matrix() {
     *this = old;
 }
 
 Matrix::Matrix(std::initializer_list<Vector> list) {
     bool isCorrectList = true;
-    bool isVertical = list.begin()->getVerticalState();
     unsigned size = list.begin()->getLen();
 
     if (std::any_of(list.begin(), list.end(),
-                    [isVertical, size](auto i) {
-                        return i.getVerticalState() != isVertical || i.getLen() != size;
+                    [size](auto i) {
+                        return i.getLen() != size;
                         })) {
         isCorrectList = false;
     }
@@ -42,15 +41,14 @@ Matrix::Matrix(std::initializer_list<Vector> list) {
         _cols = 0;
         _matrix = nullptr;
     } else {
-        _rows = isVertical ? size : list.size();
-        _cols = isVertical ? list.size() : size;
+        _rows = list.size();
+        _cols = size;
         _matrix = new Vector[_rows];
 
         unsigned counter = 0;
         for (const auto& i : list) {
             _matrix[counter] = i;
             _matrix[counter].setVerticalState(false);
-            _matrix[counter].reallocateMemory();
             counter++;
         }
     }
@@ -129,12 +127,13 @@ Matrix* Matrix::getWithout(int row, int col) {
         for (unsigned j = 0; row != i && j < _cols; ++j) {
             if (j != col) {
                 (*result)[row_counter][col_counter] = _matrix[i][j];
+                col_counter++;
             }
-
-            col_counter++;
         }
 
-        row_counter++;
+        if (row != i) {
+            row_counter++;
+        }
     }
 
     return result;
@@ -179,21 +178,25 @@ Matrix* Matrix::inv() {
         return nullptr;
     }
 
-    auto *result = new Matrix(_rows, _cols);
+    auto *raw = new Matrix(_rows, _cols);
 
     for (unsigned i = 0; i < _rows; ++i) {
         for (unsigned j = 0; j < _cols; ++j) {
             auto *tmp = this->getWithout(i, j);
 
-            (*result)[i][j] = ((i + j) % 2 == 0 ? 1 : -1) * _matrix[i][j] * tmp->det();
+            (*raw)[i][j] = ((i + j) % 2 == 0 ? 1 : -1) * tmp->det();
 
             delete tmp;
         }
     }
 
-    result->tr();
+    raw->tr();
 
-    return *result * (1. / deter);
+    auto *result = *raw * (1. / deter);
+
+    delete raw;
+
+    return result;
 }
 
 Matrix* Matrix::operator+(const Matrix& a) const {
@@ -362,7 +365,7 @@ Matrix* Matrix::operator*(const Matrix &a) const {
     double sum;
 
     for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; i < a.getCols(); ++j) {
+        for (unsigned j = 0; j < a.getCols(); ++j) {
             sum = 0;
 
             for (unsigned k = 0; k < _cols; ++k) {
