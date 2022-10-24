@@ -12,7 +12,8 @@ class Matrix {
  public:
     Matrix();
     Matrix(unsigned rows, unsigned cols);
-    Matrix(std::initializer_list<Vector> list);
+    Matrix(const Matrix &old);
+    explicit Matrix(std::initializer_list<Vector> list);
     Matrix(unsigned rows, unsigned cols, std::initializer_list<double> list);
 
     unsigned getRows() const;

@@ -12,6 +12,10 @@ Vector::Vector(unsigned int len, bool isVertical) {
     _vector = new double[len];
 }
 
+Vector::Vector(const Vector &old) {
+    *this = old;
+}
+
 Vector::Vector(std::initializer_list<double> list, bool isVertical) : Vector(list.size(), isVertical) {
     unsigned counter = 0;
 
@@ -124,14 +128,16 @@ double &Vector::operator[](unsigned int index) const {
 }
 
 Vector &Vector::operator=(const Vector &a) {
-    delete[] _vector;
+    if (&a != this) {
+        delete[] _vector;
 
-    _len = a.getLen();
-    _isVertical = a.getVerticalState();
-    _vector = new double[_len];
+        _len = a.getLen();
+        _isVertical = a.getVerticalState();
+        _vector = new double[_len];
 
-    for (unsigned i = 0; i < _len; ++i) {
-        _vector[i] = a[i];
+        for (unsigned i = 0; i < _len; ++i) {
+            _vector[i] = a[i];
+        }
     }
 
     return *this;

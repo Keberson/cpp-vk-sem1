@@ -11,6 +11,7 @@ class Vector {
 
  public:
     Vector();
+    Vector(const Vector &old);
     explicit Vector(unsigned len, bool isVertical);
     Vector(std::initializer_list<double> list, bool isVertical);
 

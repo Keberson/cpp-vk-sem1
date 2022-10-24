@@ -20,6 +20,10 @@ Matrix::Matrix(unsigned int rows, unsigned int cols) {
     }
 }
 
+Matrix::Matrix(const Matrix &old) {
+    *this = old;
+}
+
 Matrix::Matrix(std::initializer_list<Vector> list) {
     bool isCorrectList = true;
     bool isVertical = list.begin()->getVerticalState();
@@ -377,16 +381,18 @@ Vector& Matrix::operator[](unsigned index) const {
 }
 
 Matrix& Matrix::operator=(const Matrix &a) {
-    delete[] _matrix;
+    if (&a != this) {
+        delete[] _matrix;
 
-    _rows = a.getRows();
-    _cols = a.getCols();
-    _matrix = new Vector[a.getRows()];
+        _rows = a.getRows();
+        _cols = a.getCols();
+        _matrix = new Vector[a.getRows()];
 
-    for (unsigned i = 0; i < _rows; ++i) {
-        _matrix[i].setLen(_cols);
-        _matrix[i].setVerticalState(false);
-        _matrix[i] = a[i];
+        for (unsigned i = 0; i < _rows; ++i) {
+            _matrix[i].setLen(_cols);
+            _matrix[i].setVerticalState(false);
+            _matrix[i] = a[i];
+        }
     }
 
     return *this;
