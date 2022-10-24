@@ -16,11 +16,11 @@ jobs:
     needs: [check]
     steps:
     - uses: actions/checkout@v2 
-    - run: make
+    - run: cmake .
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: matrix_calculator_test
+        path: [matrix_calculator_test, vector_test]
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
