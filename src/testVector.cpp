@@ -3,7 +3,7 @@
 #include "../include/vector.h"
 
 class VectorClass : public testing::Test {
-protected:
+ protected:
     Vector *_vectorVert;
     Vector *_vectorHoriz;
 

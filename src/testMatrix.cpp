@@ -319,7 +319,6 @@ TEST_F(MatrixClass, assignmentMatrix) {
     str << tmp;
 
     EXPECT_STREQ("1 2 3\n4 6 6\n7 8 9\n", str.str().c_str());
-
 }
 
 int main(int argc, char *argv[]) {
