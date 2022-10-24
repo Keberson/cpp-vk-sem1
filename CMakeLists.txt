@@ -20,9 +20,15 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(matrix_calculator_test
-        src/test.cpp)
+        src/testMatrix.cpp)
+add_executable(vector_test
+        src/testVector.cpp)
 target_link_libraries(matrix_calculator_test matrix)
+target_link_libraries(vector_test vector)
 target_link_libraries(matrix_calculator_test ${GTEST_LIBRARIES} pthread)
+target_link_libraries(vector_test ${GTEST_LIBRARIES} pthread)
 
 add_test(NAME MatrixCalculatorTest
         COMMAND matrix_calculator_test)
+add_test(NAME VectorTest
+        COMMAND vector_test)
