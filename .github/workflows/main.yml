@@ -31,6 +31,6 @@ jobs:
     container: keberson/vk-gcc
     needs: [build]
     steps:
-      - uses: actions/checkout@v2 
-      - run: ./matrix_calculator_test
-      - run: ./vector_test
+      - uses: actions/checkout@v2
+        run: ./app/matrix_calculator_test
+        run: ./app/vector_test
