@@ -32,5 +32,5 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-        run: ./app/matrix_calculator_test
-        run: ./app/vector_test
+      - run: ./app/matrix_calculator_test
+      - run: ./app/vector_test
