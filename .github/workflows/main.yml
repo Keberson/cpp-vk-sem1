@@ -34,9 +34,9 @@ jobs:
     needs: [build]
     steps:
       - name: Download vector and matrix
-          uses: actions/download-artifact@v3
-          with:
-            name: [matrix, vector]
+        uses: actions/download-artifact@v3
+        with:
+          name: [matrix, vector]
       - uses: actions/checkout@v2
       - run: ./matrix
       - run: ./vector
