@@ -37,6 +37,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: matrix
-      - name: Run tests
+      - name: Run matrix
         uses: actions/checkout@v2
-      - run: matrix
+        run: matrix_calculator_test
