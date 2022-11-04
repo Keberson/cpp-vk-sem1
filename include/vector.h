@@ -10,9 +10,10 @@ class Vector {
     bool _isVertical;
 
  public:
-    Vector() : _vector(nullptr), _len(0), _isVertical(false) {};
+    Vector() : _vector(nullptr), _len(0), _isVertical(false) {}
     Vector(const Vector &old);
-    explicit Vector(size_t len, bool isVertical) : _vector(new double[len]), _len(len), _isVertical(isVertical) {};
+    explicit Vector(size_t len, bool isVertical) :
+            _vector(new double[len]), _len(len), _isVertical(isVertical) {}
     Vector(std::initializer_list<double> list, bool isVertical);
 
     void reallocateMemory();

@@ -59,7 +59,7 @@ Vector Vector::operator+(const Vector& operand) const {
 }
 
 Vector Vector::sumOn(size_t index, double numb) const {
-    if (index > _len || index < 0) {
+    if (index > _len) {
         throw std::invalid_argument("Invalid index");
     }
 
@@ -87,7 +87,7 @@ Vector Vector::operator-(const Vector& operand) const {
 }
 
 Vector Vector::subOn(size_t index, double numb) const {
-    if (index > _len || index < 0) {
+    if (index > _len) {
         throw std::invalid_argument("Invalid index");
     }
 

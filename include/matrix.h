@@ -10,7 +10,7 @@ class Matrix {
     size_t _cols;
 
  public:
-    Matrix() : _matrix(nullptr), _rows(0), _cols(0) {};
+    Matrix() : _matrix(nullptr), _rows(0), _cols(0) { }
     Matrix(size_t rows, size_t cols);
     Matrix(const Matrix &old);
     explicit Matrix(std::initializer_list<Vector> list);

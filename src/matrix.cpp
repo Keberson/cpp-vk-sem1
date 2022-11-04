@@ -338,7 +338,8 @@ Matrix Matrix::operator*(const double& operand) const {
 }
 
 Matrix Matrix::operator*(const Vector& operand) const {
-    if ((operand.getVerticalState() && _cols != operand.getLen()) || (!operand.getVerticalState() && _cols != 1)) {
+    if ((operand.getVerticalState() && _cols != operand.getLen()) ||
+            (!operand.getVerticalState() && _cols != 1)) {
         throw std::invalid_argument("Invalid matrix and vector");
     }
 
