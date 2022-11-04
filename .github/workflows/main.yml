@@ -39,6 +39,7 @@ jobs:
           name: matrix
       - with:
           name: vector
+      - name: Run tests
       - uses: actions/checkout@v2
       - run: ./matrix
       - run: ./vector
