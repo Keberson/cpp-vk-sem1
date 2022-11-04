@@ -60,56 +60,36 @@ TEST_F(VectorClass, getDirection) {
 
 TEST_F(VectorClass, sumVector) {
     std::stringstream str;
-    Vector *tmp = *_vectorHoriz + *_vectorHoriz;
+    Vector tmp = *_vectorHoriz + *_vectorHoriz;
 
-    str << *(tmp);
-
-    delete tmp;
+    str << tmp;
 
     EXPECT_STREQ("2 4 6", str.str().c_str());
 }
 
-TEST_F(VectorClass, sumVectorDiffDirection) {
-    Vector *tmp = *_vectorHoriz + *_vectorVert;
-
-    EXPECT_EQ(nullptr, tmp);
-}
-
 TEST_F(VectorClass, sumOnIndexNumb) {
     std::stringstream str;
-    Vector *tmp = _vectorVert->sumOn(0, 5);
+    Vector tmp = _vectorVert->sumOn(0, 5);
 
-    str << *(tmp);
-
-    delete tmp;
+    str << tmp;
 
     EXPECT_STREQ("6\n2\n3", str.str().c_str());
 }
 
 TEST_F(VectorClass, subVector) {
     std::stringstream str;
-    Vector *tmp = *_vectorHoriz - *_vectorHoriz;
+    Vector tmp = *_vectorHoriz - *_vectorHoriz;
 
-    str << *(tmp);
-
-    delete tmp;
+    str << tmp;
 
     EXPECT_STREQ("0 0 0", str.str().c_str());
 }
 
-TEST_F(VectorClass, subVectorDiffDirection) {
-    Vector *tmp = *_vectorHoriz - *_vectorVert;
-
-    EXPECT_EQ(nullptr, tmp);
-}
-
 TEST_F(VectorClass, subOnIndexNumb) {
     std::stringstream str;
-    Vector *tmp = _vectorVert->subOn(0, 5);
+    Vector tmp = _vectorVert->subOn(0, 5);
 
-    str << *(tmp);
-
-    delete tmp;
+    str << tmp;
 
     EXPECT_STREQ("-4\n2\n3", str.str().c_str());
 }
@@ -117,28 +97,18 @@ TEST_F(VectorClass, subOnIndexNumb) {
 TEST_F(VectorClass, composElemVector) {
     std::stringstream str;
     Vector on(*_vectorHoriz);
-    Vector *tmp = *_vectorHoriz & on;
+    Vector tmp = *_vectorHoriz & on;
 
-    str << *(tmp);
-
-    delete tmp;
+    str << tmp;
 
     EXPECT_STREQ("1 4 9", str.str().c_str());
 }
 
-TEST_F(VectorClass, composElemVectorDiffDirection) {
-    Vector *tmp = *_vectorHoriz & *_vectorVert;
-
-    EXPECT_EQ(nullptr, tmp);
-}
-
 TEST_F(VectorClass, composVectorNumb) {
     std::stringstream str;
-    Vector *tmp = *_vectorHoriz * 5;
+    Vector tmp = *_vectorHoriz * 5;
 
-    str << *(tmp);
-
-    delete tmp;
+    str << tmp;
 
     EXPECT_STREQ("5 10 15", str.str().c_str());
 }
