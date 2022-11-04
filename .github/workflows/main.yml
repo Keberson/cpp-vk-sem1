@@ -39,4 +39,4 @@ jobs:
           name: matrix
       - name: Run tests
         uses: actions/checkout@v2
-      - run: ./matrix
+      - run: matrix
