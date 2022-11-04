@@ -32,5 +32,4 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - run: ./app/matrix_calculator_test
-      - run: ./app/vector_test
+      - run: cmake . &&  cmake --build . &&  CTEST_OUTPUT_ON_FAILURE=TRUE cmake --build . --target test
