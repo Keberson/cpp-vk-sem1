@@ -35,11 +35,11 @@ jobs:
     steps:
       - name: Download vector and matrix
         uses: actions/download-artifact@v3
-      - with:
+        with:
           name: matrix
-      - with:
+        with:
           name: vector
       - name: Run tests
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - run: ./matrix
       - run: ./vector
