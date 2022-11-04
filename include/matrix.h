@@ -6,42 +6,46 @@
 class Matrix {
  private:
     Vector *_matrix;
-    unsigned _rows;
-    unsigned _cols;
+    size_t _rows;
+    size_t _cols;
 
  public:
-    Matrix();
-    Matrix(unsigned rows, unsigned cols);
+    Matrix() : _matrix(nullptr), _rows(0), _cols(0) {};
+    Matrix(size_t rows, size_t cols);
     Matrix(const Matrix &old);
     explicit Matrix(std::initializer_list<Vector> list);
-    Matrix(unsigned rows, unsigned cols, std::initializer_list<double> list);
+    Matrix(size_t rows, size_t cols, std::initializer_list<double> list);
 
-    unsigned getRows() const;
-    unsigned getCols() const;
+    size_t getRows() const;
+    size_t getCols() const;
 
-    Vector* getRow(unsigned row);
-    Vector* getCol(unsigned col);
-    Vector* getDiag();
-    Matrix* getWithout(int row, int col);
+    Vector getRow(size_t row) const;
+    Vector getCol(size_t col) const;
+    Vector getDiag() const;
+    Matrix getWithout(size_t row, size_t col) const;
 
-    void tr();
-    double det();
-    Matrix* inv();
+    Matrix tr();
+    double det() const;
+    Matrix inv() const;
 
-    Matrix* operator+(const Matrix& a) const;
-    Matrix* sumOn(int row, int col, double numb) const;
-    Matrix* sumOn(int row, int col, const Vector &a) const;
-    Matrix* operator-(const Matrix& a) const;
-    Matrix* subOn(int row, int col, double numb) const;
-    Matrix* subOn(int row, int col, const Vector &a) const;
-    Matrix* operator&(const Matrix& a) const;
-    Matrix* operator*(const double &a) const;
-    Matrix* operator*(const Vector &a) const;
-    Matrix* operator*(const Matrix &a) const;
+    Matrix operator+(const Matrix& operand) const;
+    Matrix sumOn(size_t row, size_t col, double numb) const;
+    Matrix sumOn(size_t row, size_t col, const Vector& operand) const;
+    Matrix operator-(const Matrix& operand) const;
+    Matrix subOn(int row, int col, double numb) const;
+    Matrix subOn(int row, int col, const Vector& operand) const;
+    Matrix operator&(const Matrix& operand) const;
+    Matrix operator*(const double& operand) const;
+    Matrix operator*(const Vector& operand) const;
+    Matrix operator*(const Matrix& operand) const;
 
-    Vector& operator[](unsigned index) const;
+    Vector& operator[](size_t index) const;
 
-    Matrix& operator=(const Matrix &a);
+    Matrix& operator=(const Matrix& operand);
+    Matrix& operator+=(const Matrix& operand);
+    Matrix& operator-=(const Matrix& operand);
+    Matrix& operator*=(const Matrix& operand);
+    Matrix& operator&=(const Matrix& operand);
 
     friend std::ostream& operator<<(std::ostream &out, const Matrix &item);
 

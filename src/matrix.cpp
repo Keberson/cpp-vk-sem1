@@ -2,18 +2,12 @@
 
 #include <algorithm>
 
-Matrix::Matrix() {
-    _rows = 0;
-    _cols = 0;
-    _matrix = nullptr;
-}
-
-Matrix::Matrix(unsigned int rows, unsigned int cols) {
+Matrix::Matrix(size_t rows, size_t cols) {
     _rows = rows;
     _cols = cols;
     _matrix = new Vector[rows];
 
-    for (unsigned i = 0; i < _rows; ++i) {
+    for (size_t i = 0; i < _rows; ++i) {
         _matrix[i].setLen(_cols);
         _matrix[i].setVerticalState(false);
         _matrix[i].reallocateMemory();
@@ -26,7 +20,7 @@ Matrix::Matrix(const Matrix &old) : Matrix() {
 
 Matrix::Matrix(std::initializer_list<Vector> list) {
     bool isCorrectList = true;
-    unsigned size = list.begin()->getLen();
+    size_t size = list.begin()->getLen();
 
     if (std::any_of(list.begin(), list.end(),
                     [size](auto i) {
@@ -37,15 +31,13 @@ Matrix::Matrix(std::initializer_list<Vector> list) {
 
 
     if (!isCorrectList) {
-        _rows = 0;
-        _cols = 0;
-        _matrix = nullptr;
+        throw std::invalid_argument("Matrix: Invalid initializer list");
     } else {
         _rows = list.size();
         _cols = size;
         _matrix = new Vector[_rows];
 
-        unsigned counter = 0;
+        size_t counter = 0;
         for (const auto& i : list) {
             _matrix[counter] = i;
             _matrix[counter].setVerticalState(false);
@@ -54,292 +46,314 @@ Matrix::Matrix(std::initializer_list<Vector> list) {
     }
 }
 
-Matrix::Matrix(unsigned int rows, unsigned int cols, std::initializer_list<double> list) {
+Matrix::Matrix(size_t rows, size_t cols, std::initializer_list<double> list) {
     _rows = rows;
     _cols = cols;
     _matrix = new Vector[rows];
 
-    for (unsigned i = 0, list_counter = 0; i < _rows; ++i) {
+    for (size_t i = 0, list_counter = 0; i < _rows; ++i) {
         _matrix[i].setLen(_cols);
         _matrix[i].setVerticalState(false);
         _matrix[i].reallocateMemory();
 
-        for (unsigned j = 0; j < _cols; ++j) {
+        for (size_t j = 0; j < _cols; ++j) {
             _matrix[i][j] = *(list.begin() + list_counter);
             list_counter++;
         }
     }
 }
 
-unsigned Matrix::getRows() const {
+size_t Matrix::getRows() const {
     return _rows;
 }
 
-unsigned Matrix::getCols() const {
+size_t Matrix::getCols() const {
     return _cols;
 }
 
-Vector* Matrix::getRow(unsigned row) {
-    auto *result = new Vector(_cols, false);
+Vector Matrix::getRow(size_t row) const {
+    if (row > _rows) {
+        throw std::invalid_argument("getRow: Invalid argument");
+    }
 
-    for (unsigned i = 0; i < _cols; ++i) {
-        (*result)[i] = _matrix[row][i];
+    Vector result(_cols, false);
+
+    for (size_t i = 0; i < _cols; ++i) {
+        result[i] = _matrix[row][i];
     }
 
     return result;
 }
 
-Vector* Matrix::getCol(unsigned col) {
-    auto *result = new Vector(_rows, true);
+Vector Matrix::getCol(size_t col) const {
+    if (col > _cols) {
+        throw std::invalid_argument("getRow: Invalid argument");
+    }
 
-    for (unsigned i = 0; i < _rows; ++i) {
-        (*result)[i] = _matrix[i][col];
+    Vector result(_rows, true);
+
+    for (size_t i = 0; i < _rows; ++i) {
+        result[i] = _matrix[i][col];
     }
 
     return result;
 }
 
-Vector* Matrix::getDiag() {
-    unsigned size = _rows > _cols ? _cols : _rows;
-    auto *result = new Vector(size, true);
+Vector Matrix::getDiag() const {
+    size_t size = _rows > _cols ? _cols : _rows;
+    Vector result(_rows, true);
 
-    for (unsigned i = 0; i < size; ++i) {
-        (*result)[i] = _matrix[i][i];
+    for (size_t i = 0; i < size; ++i) {
+        result[i] = _matrix[i][i];
     }
 
     return result;
 }
 
-Matrix* Matrix::getWithout(int row, int col) {
-    auto *result = new Matrix(_rows - 1, _cols - 1);
+Matrix Matrix::getWithout(size_t row, size_t col) const {
+    Matrix result(_rows - 1, _cols - 1);
 
-    for (unsigned i = 0, row_counter = 0, col_counter; i < _rows; ++i) {
+    for (size_t i = 0, row_counter = 0, col_counter; i < _rows; ++i) {
         col_counter = 0;
 
-        for (unsigned j = 0; row != i && j < _cols; ++j) {
+        if (row == i) {
+            continue;
+        }
+
+        for (size_t j = 0; j < _cols; ++j) {
             if (j != col) {
-                (*result)[row_counter][col_counter] = _matrix[i][j];
+                result[row_counter][col_counter] = _matrix[i][j];
                 col_counter++;
             }
         }
 
-        if (row != i) {
-            row_counter++;
-        }
+        row_counter++;
     }
 
     return result;
 }
 
-void Matrix::tr() {
-    auto *tmp = new Matrix(_cols, _rows);
+Matrix Matrix::tr() {
+    Matrix tmp(_cols, _rows);
 
-    for (unsigned i = 0; i < _cols; ++i) {
-        for (unsigned j = 0; j < _rows; ++j) {
-            (*tmp)[i][j] = _matrix[j][i];
+    for (size_t i = 0; i < _cols; ++i) {
+        for (size_t j = 0; j < _rows; ++j) {
+            tmp[i][j] = _matrix[j][i];
         }
     }
 
-    *this = *tmp;
-
-    delete tmp;
+    return tmp;
 }
 
-double Matrix::det() {
+double Matrix::det() const {
     double result = 0;
+
+    if (_rows != _cols) {
+        throw std::invalid_argument("det: Invalid matrix");
+    }
+
+    if (_rows == 1) {
+        return _matrix[0][0];
+    }
 
     if (_rows == 2) {
         return _matrix[0][0] * _matrix[1][1] - _matrix[0][1] * _matrix[1][0];
     }
 
-    for (unsigned i = 0; i < _cols; ++i) {
-        auto *tmp = this->getWithout(0, i);
+    for (size_t i = 0; i < _cols; ++i) {
+        auto tmp = this->getWithout(0, i);
 
-        result += (i % 2 == 0 ? 1 : -1) * _matrix[0][i] * tmp->det();
-
-        delete tmp;
+        result += (i % 2 == 0 ? 1 : -1) * _matrix[0][i] * tmp.det();
     }
 
     return result;
 }
 
-Matrix* Matrix::inv() {
+Matrix Matrix::inv() const {
     double deter = this->det();
 
     if (deter == 0) {
-        return nullptr;
+        throw std::invalid_argument("inv: Determinant is null");
     }
 
-    auto *raw = new Matrix(_rows, _cols);
+    Matrix raw(_rows, _cols);
 
-    for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; j < _cols; ++j) {
-            auto *tmp = this->getWithout(i, j);
+    for (size_t i = 0; i < _rows; ++i) {
+        for (size_t j = 0; j < _cols; ++j) {
+            auto tmp = this->getWithout(i, j);
 
-            (*raw)[i][j] = ((i + j) % 2 == 0 ? 1 : -1) * tmp->det();
-
-            delete tmp;
+            raw[i][j] = ((i + j) % 2 == 0 ? 1 : -1) * tmp.det();
         }
     }
 
-    raw->tr();
-
-    auto *result = *raw * (1. / deter);
-
-    delete raw;
-
-    return result;
+    return raw.tr() * (1. / deter);
 }
 
-Matrix* Matrix::operator+(const Matrix& a) const {
-    if (_rows != a.getRows() || _cols != a.getCols()) {
-        return nullptr;
+Matrix Matrix::operator+(const Matrix& operand) const {
+    if (_rows != operand.getRows() || _cols != operand.getCols()) {
+        throw std::invalid_argument("sum: Invalid matrices");
     }
 
-    auto *result = new Matrix(_rows, _cols);
+    Matrix result(_rows, _cols);
 
-    for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; j < _cols; ++j) {
-            (*result)[i][j] = _matrix[i][j] + a[i][j];
+    for (size_t i = 0; i < _rows; ++i) {
+        for (size_t j = 0; j < _cols; ++j) {
+            result[i][j] = _matrix[i][j] + operand[i][j];
         }
     }
 
     return result;
 }
 
-Matrix* Matrix::sumOn(int row, int col, double numb) const {
-    auto *result = new Matrix(_rows, _cols);
-    *result = *this;
+Matrix Matrix::sumOn(size_t row, size_t col, double numb) const {
+    Matrix result(*this);
 
     if (row != -1 && col != -1) {
-        (*result)[row][col] += numb;
+        result[row][col] += numb;
     } else if (row != -1) {
-        for (unsigned i = 0; i < _cols; ++i) {
-            (*result)[row][i] += numb;
+        for (size_t i = 0; i < _cols; ++i) {
+            result[row][i] += numb;
         }
     } else if (col != -1) {
-        for (unsigned i = 0; i < _rows; ++i) {
-            (*result)[i][col] += numb;
+        for (size_t i = 0; i < _rows; ++i) {
+            result[i][col] += numb;
         }
     }
 
     return result;
 }
 
-Matrix* Matrix::sumOn(int row, int col, const Vector &a) const {
-    auto *result = new Matrix(_rows, _cols);
-    *result = *this;
+Matrix Matrix::sumOn(size_t row, size_t col, const Vector& operand) const {
+    Matrix result(*this);
 
-    for (unsigned i = 0; row != -1 && !a.getVerticalState() && i < _cols; ++i) {
-        (*result)[row][i] += a[i];
+    if (row != -1 && !operand.getVerticalState()) {
+        for (size_t i = 0; i < _cols; ++i) {
+            result[row][i] += operand[i];
+        }
     }
 
-    for (unsigned i = 0; col != -1 && a.getVerticalState() && i < _rows; ++i) {
-        (*result)[i][col] += a[i];
-    }
-
-    return result;
-}
-
-Matrix* Matrix::operator-(const Matrix& a) const {
-    if (_rows != a.getRows() || _cols != a.getCols()) {
-        return nullptr;
-    }
-
-    auto *result = new Matrix(_rows, _cols);
-
-    for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; j < _cols; ++j) {
-            (*result)[i][j] = _matrix[i][j] - a[i][j];
+    if (col != -1 && operand.getVerticalState()) {
+        for (size_t i = 0;  i < _rows; ++i) {
+            result[i][col] += operand[i];
         }
     }
 
     return result;
 }
 
-Matrix* Matrix::subOn(int row, int col, double numb) const {
-    auto *result = new Matrix(_rows, _cols);
-    *result = *this;
+Matrix Matrix::operator-(const Matrix& operand) const {
+    if (_rows != operand.getRows() || _cols != operand.getCols()) {
+        throw std::invalid_argument("Invalid matrices");
+    }
+
+    Matrix result(_rows, _cols);
+
+    for (size_t i = 0; i < _rows; ++i) {
+        for (size_t j = 0; j < _cols; ++j) {
+            result[i][j] = _matrix[i][j] - operand[i][j];
+        }
+    }
+
+    return result;
+}
+
+Matrix Matrix::subOn(int row, int col, double numb) const {
+    if ((row < 0 && row != -1) || row >= (int)_rows) {
+        throw std::invalid_argument("subOn: Invalid row");
+    }
+
+    if ((col < 0 && col != -1) || col >= (int)_cols) {
+        throw std::invalid_argument("subOn: Invalid col");
+    }
+
+    Matrix result(*this);
 
     if (row != -1 && col != -1) {
-        (*result)[row][col] -= numb;
+        result[row][col] -= numb;
     } else if (row != -1) {
-        for (unsigned i = 0; i < _cols; ++i) {
-            (*result)[row][i] -= numb;
+        for (size_t i = 0; i < _cols; ++i) {
+            result[row][i] -= numb;
         }
     } else if (col != -1) {
-        for (unsigned i = 0; i < _rows; ++i) {
-            (*result)[i][col] -= numb;
+        for (size_t i = 0; i < _rows; ++i) {
+            result[i][col] -= numb;
         }
     }
 
     return result;
 }
 
-Matrix* Matrix::subOn(int row, int col, const Vector &a) const {
-    auto *result = new Matrix(_rows, _cols);
-    *result = *this;
-
-    for (unsigned i = 0; row != -1 && !a.getVerticalState() && i < _cols; ++i) {
-        (*result)[row][i] -= a[i];
+Matrix Matrix::subOn(int row, int col, const Vector& operand) const {
+    if ((row < 0 && row != -1) || row >= (int)_rows) {
+        throw std::invalid_argument("subOn: Invalid row");
     }
 
-    for (unsigned i = 0; col != -1 && a.getVerticalState() && i < _rows; ++i) {
-        (*result)[i][col] -= a[i];
+    if ((col < 0 && col != -1) || col >= (int)_cols) {
+        throw std::invalid_argument("subOn: Invalid col");
     }
 
-    return result;
-}
+    Matrix result(*this);
 
-Matrix* Matrix::operator&(const Matrix& a) const {
-    if (_rows != a.getRows() || _cols != a.getCols()) {
-        return nullptr;
+    if (row != -1 && !operand.getVerticalState()) {
+        for (size_t i = 0; i < _cols; ++i) {
+            result[row][i] -= operand[i];
+        }
     }
 
-    auto *result = new Matrix(_rows, _cols);
-
-    for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; j < _cols; ++j) {
-            (*result)[i][j] = _matrix[i][j] * a[i][j];
+    if (col != -1 && operand.getVerticalState()) {
+        for (size_t i = 0; i < _rows; ++i) {
+            result[i][col] -= operand[i];
         }
     }
 
     return result;
 }
 
-Matrix* Matrix::operator*(const double &a) const {
-    auto *result = new Matrix(_rows, _cols);
+Matrix Matrix::operator&(const Matrix& operand) const {
+    if (_rows != operand.getRows() || _cols != operand.getCols()) {
+        throw std::invalid_argument("Invalid matrices");
+    }
 
-    for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; j < _cols; ++j) {
-            (*result)[i][j] = _matrix[i][j] * a;
+    Matrix result(_rows, _cols);
+
+    for (size_t i = 0; i < _rows; ++i) {
+        for (size_t j = 0; j < _cols; ++j) {
+            result[i][j] = _matrix[i][j] * operand[i][j];
         }
     }
 
     return result;
 }
 
-Matrix* Matrix::operator*(const Vector &a) const {
-    if ((a.getVerticalState() && _cols != a.getLen()) || (!a.getVerticalState() && _cols != 1)) {
-        return nullptr;
+Matrix Matrix::operator*(const double& operand) const {
+    Matrix result(_rows, _cols);
+
+    for (size_t i = 0; i < _rows; ++i) {
+        for (size_t j = 0; j < _cols; ++j) {
+            result[i][j] = _matrix[i][j] * operand;
+        }
     }
 
-    auto *result = new Matrix(_rows, a.getVerticalState() ? 1 : a.getLen());
+    return result;
+}
 
-    if (a.getVerticalState()) {
-        for (unsigned i = 0; i < _rows; ++i) {
-            double sum = 0;
+Matrix Matrix::operator*(const Vector& operand) const {
+    if ((operand.getVerticalState() && _cols != operand.getLen()) || (!operand.getVerticalState() && _cols != 1)) {
+        throw std::invalid_argument("Invalid matrix and vector");
+    }
 
-            for (unsigned j = 0; j < _cols; ++j) {
-                sum += _matrix[i][j] * a[j];
+    Matrix result(_rows, operand.getVerticalState() ? 1 : operand.getLen());
+
+    if (operand.getVerticalState()) {
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < _cols; ++j) {
+                result[i][0] += _matrix[i][j] * operand[j];
             }
-
-            (*result)[i][0] = sum;
         }
     } else {
-        for (unsigned i = 0; i < _rows; ++i) {
-            for (unsigned j = 0; j < a.getLen(); ++j) {
-                (*result)[i][j] = _matrix[i][0] * a[j];
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < operand.getLen(); ++j) {
+                result[i][j] = _matrix[i][0] * operand[j];
             }
         }
     }
@@ -347,55 +361,65 @@ Matrix* Matrix::operator*(const Vector &a) const {
     return result;
 }
 
-Matrix* Matrix::operator*(const Matrix &a) const {
-    if (_cols != a.getRows()) {
-        return nullptr;
+Matrix Matrix::operator*(const Matrix& operand) const {
+    if (_cols != operand.getRows()) {
+        throw std::invalid_argument("Invalid matrices");
     }
 
-    auto *result = new Matrix(_rows, a.getCols());
+    Matrix result(_rows, operand.getCols());
 
-    double sum;
-
-    for (unsigned i = 0; i < _rows; ++i) {
-        for (unsigned j = 0; j < a.getCols(); ++j) {
-            sum = 0;
-
-            for (unsigned k = 0; k < _cols; ++k) {
-                sum += _matrix[i][k] * a[k][j];
+    for (size_t i = 0; i < _rows; ++i) {
+        for (size_t j = 0; j < operand.getCols(); ++j) {
+            for (size_t k = 0; k < _cols; ++k) {
+                result[i][j] += _matrix[i][k] * operand[k][j];
             }
-
-            (*result)[i][j] = sum;
         }
     }
 
     return result;
 }
 
-Vector& Matrix::operator[](unsigned index) const {
+Vector& Matrix::operator[](size_t index) const {
     return _matrix[index];
 }
 
-Matrix& Matrix::operator=(const Matrix &a) {
-    if (&a != this) {
+Matrix& Matrix::operator=(const Matrix& operand) {
+    if (&operand != this) {
         delete[] _matrix;
 
-        _rows = a.getRows();
-        _cols = a.getCols();
-        _matrix = new Vector[a.getRows()];
+        _rows = operand.getRows();
+        _cols = operand.getCols();
+        _matrix = new Vector[operand.getRows()];
 
-        for (unsigned i = 0; i < _rows; ++i) {
+        for (size_t i = 0; i < _rows; ++i) {
             _matrix[i].setLen(_cols);
             _matrix[i].setVerticalState(false);
-            _matrix[i] = a[i];
+            _matrix[i] = operand[i];
         }
     }
 
     return *this;
 }
 
+Matrix& Matrix::operator+=(const Matrix& operand) {
+    return *this = *this + operand;
+}
+
+Matrix& Matrix::operator-=(const Matrix& operand) {
+    return *this = *this - operand;
+}
+
+Matrix& Matrix::operator*=(const Matrix& operand) {
+    return *this = *this * operand;
+}
+
+Matrix& Matrix::operator&=(const Matrix& operand) {
+    return *this = *this & operand;
+}
+
 std::ostream& operator<<(std::ostream &out, const Matrix &item) {
-    for (unsigned i = 0; i < item._rows; ++i) {
-        for (unsigned j = 0; j < item._cols; ++j) {
+    for (size_t i = 0; i < item._rows; ++i) {
+        for (size_t j = 0; j < item._cols; ++j) {
             out << item[i][j];
 
             if (j != item._cols - 1) {
