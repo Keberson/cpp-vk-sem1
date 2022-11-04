@@ -17,6 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2 
     - run: cmake .
+    - run: make
     - name: Upload matrix
       uses: actions/upload-artifact@v2
       with:

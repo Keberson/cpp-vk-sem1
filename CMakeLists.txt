@@ -13,16 +13,15 @@ add_library(matrix SHARED
         src/matrix.cpp)
 target_link_libraries(matrix vector)
 
-
 enable_testing()
 
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(matrix_calculator_test
-        src/testMatrix.cpp)
+        tests/testMatrix.cpp)
 add_executable(vector_test
-        src/testVector.cpp)
+        tests/testVector.cpp)
 target_link_libraries(matrix_calculator_test matrix)
 target_link_libraries(vector_test vector)
 target_link_libraries(matrix_calculator_test ${GTEST_LIBRARIES} pthread)
