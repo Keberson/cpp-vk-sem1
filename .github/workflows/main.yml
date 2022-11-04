@@ -33,10 +33,5 @@ jobs:
     container: keberson/vk-gcc
     needs: [build]
     steps:
-      - name: Download vector and matrix
-        uses: actions/download-artifact@v3
-        with:
-          name: matrix
-      - name: Run matrix
-        uses: actions/checkout@v2
-      - run: ./matrix_calculator_test
+      - uses: actions/checkout@v2
+      - run: cmake . &&  cmake --build . &&  CTEST_OUTPUT_ON_FAILURE=TRUE cmake --build . --target test
