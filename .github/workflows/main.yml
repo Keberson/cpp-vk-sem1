@@ -34,9 +34,9 @@ jobs:
       with:
         path: libmatrix.so
     - name: Upload vector library
-      uses: actions/upload-artifact@v2
-      with:
-        path: libvector.so
+        uses: actions/upload-artifact@v2
+        with:
+          path: libmatrix.so
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
@@ -47,6 +47,8 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
+          mv artifact/* .
+          ls -R
           chmod u+x matrix/matrix_calculator_test
           chmod u+x vector/vector_test
           ./matrix/matrix_calculator_test
