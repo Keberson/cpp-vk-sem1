@@ -48,7 +48,6 @@ jobs:
         shell: bash
         run: |
           mv artifact/* .
-          ls -R
           chmod u+x matrix/matrix_calculator_test
           chmod u+x vector/vector_test
           ./matrix/matrix_calculator_test
