@@ -34,7 +34,7 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - shell: bash
       - run: |
           chmod u+x matrix_calculator_test
           sh matrix_calculator_test
+        shell: bash
