@@ -33,6 +33,10 @@ jobs:
     container: keberson/vk-gcc
     needs: [build]
     steps:
+      - name: Upload vector
+        uses: actions/download-artifact@v2
+        with:
+          name: vector
       - uses: actions/checkout@v2
       - run: |
           ls
