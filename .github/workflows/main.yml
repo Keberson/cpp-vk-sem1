@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Download matrix
         uses: actions/download-artifact@v2
-      - uses: actions/checkout@v2
+      - name: Run matrix
       - shell: bash
         run: |
           ls
