@@ -36,12 +36,8 @@ jobs:
     steps:
       - name: Download matrix
         uses: actions/download-artifact@v2
-        with:
-          name: matrix
       - uses: actions/checkout@v2
-      - run: |
+      - shell: bash
+        run: |
           ls
-          ls /__w/cpp-vk-sem1/cpp-vk-sem1
-          chmod u+x matrix_calculator_test
-          sh matrix_calculator_test
-        shell: bash
+          ./matrix_calculator_test
