@@ -34,4 +34,7 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-      - run: cmake . &&  cmake --build . &&  CTEST_OUTPUT_ON_FAILURE=TRUE cmake --build . --target test
+      - shell: bash
+      - run: |
+          chmod u+x matrix_calculator_test
+          sh matrix_calculator_test
