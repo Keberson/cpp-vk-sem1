@@ -40,5 +40,5 @@ jobs:
         shell: bash
         run: |
           ls -R
-          ./matrix
-          ./vector
+          ./matrix/matrix_calculator_test
+          ./vector/vector_test
