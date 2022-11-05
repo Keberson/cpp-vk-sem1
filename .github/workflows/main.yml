@@ -37,7 +37,7 @@ jobs:
       - name: Download matrix
         uses: actions/download-artifact@v2
       - name: Run matrix
-      - shell: bash
+        shell: bash
         run: |
           ls
           ./matrix_calculator_test
