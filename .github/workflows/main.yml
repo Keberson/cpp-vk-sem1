@@ -34,10 +34,11 @@ jobs:
     container: keberson/vk-gcc
     needs: [build]
     steps:
-      - name: Download matrix
+      - name: Download artifacts
         uses: actions/download-artifact@v2
-      - name: Run matrix
+      - name: Run tests
         shell: bash
         run: |
           ls
-          ./matrix_calculator_test
+          ./matrix
+          ./vector
