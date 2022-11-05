@@ -39,6 +39,6 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          ls
+          ls -R
           ./matrix
           ./vector
