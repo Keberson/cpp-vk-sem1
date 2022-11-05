@@ -36,7 +36,7 @@ jobs:
     - name: Upload vector library
       uses: actions/upload-artifact@v2
       with:
-        path: libmatrix.so
+        path: libvector.so
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
