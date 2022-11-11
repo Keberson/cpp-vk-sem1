@@ -8,23 +8,47 @@ jobs:
     container: keberson/vk-gcc
     steps:
       - uses: actions/checkout@v2 
-      - run: python3 cpplint.py --extensions=cpp src/*.cpp
-      - run: cppcheck --enable=all --suppress=missingIncludeSystem .
+      - run: python3 cpplint.py --extensions=cpp src/*.cpp include/*.h tests/*.cpp
+      - run: cppcheck --error-exitcode=1 --enable=all --suppress=missingIncludeSystem src/ tests/ -I include/
   build:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
     needs: [check]
     steps:
     - uses: actions/checkout@v2 
-    - run: make build
-    - name: Upload artifacts
+    - run: cmake .
+    - run: make
+    - run: ls
+    - name: Upload matrix
       uses: actions/upload-artifact@v2
       with:
+        name: matrix
         path: matrix_calculator_test
+    - name: Upload vector
+      uses: actions/upload-artifact@v2
+      with:
+        name: vector
+        path: vector_test
+    - name: Upload matrix library
+      uses: actions/upload-artifact@v2
+      with:
+        path: libmatrix.so
+    - name: Upload vector library
+      uses: actions/upload-artifact@v2
+      with:
+        path: libvector.so
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
     needs: [build]
     steps:
-      - uses: actions/checkout@v2 
-      - run: cmake . &&  cmake --build . &&  CTEST_OUTPUT_ON_FAILURE=TRUE cmake --build . --target test
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Run tests
+        shell: bash
+        run: |
+          mv artifact/* .
+          chmod u+x matrix/matrix_calculator_test
+          chmod u+x vector/vector_test
+          ./matrix/matrix_calculator_test
+          ./vector/vector_test
