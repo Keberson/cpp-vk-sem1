@@ -1,11 +1,6 @@
 #include "../include/set.h"
 
 template<typename T>
-bool comparator(T &a, T &b) {
-    return a > b;
-}
-
-template<typename T>
 void Set<T>::siftUp(size_t index) {
     while (index != 0 && _cmp(_arr[index], _arr[(index - 1) / 2])) {
         std::swap(_arr[index], _arr[(index - 1) / 2]);
@@ -13,7 +8,7 @@ void Set<T>::siftUp(size_t index) {
     }
 }
 
-template<class T>
+template<typename T>
 void Set<T>::siftDown(size_t index) {
     while (2 * index + 1 < _arr.size()) {
         auto left = 2 * index + 1;
@@ -33,7 +28,7 @@ void Set<T>::siftDown(size_t index) {
     }
 }
 
-template<class T>
+template<typename T>
 void Set<T>::push(T elem) {
     if (find(elem) != _arr.end()) {
         _arr.push(elem);
@@ -41,7 +36,7 @@ void Set<T>::push(T elem) {
     }
 }
 
-template<class T>
+template<typename T>
 T Set<T>::pop() {
     T min = _arr[0];
 
@@ -51,27 +46,27 @@ T Set<T>::pop() {
     return min;
 }
 
-template<class T>
-Set<T>::Set(typename T::iterator begin, typename T::iterator end) : Set<T>() {
+template<typename T>
+Set<T>::Set(iterator begin, iterator end) : Set<T>() {
     while (begin != end) {
         _arr.push(*begin);
         begin++;
     }
 }
 
-template<class T>
+template<typename T>
 Set<T>::Set(std::initializer_list<T> list) : Set<T>() {
     for (const auto &i : list) {
         push(i);
     }
 }
 
-template<class T>
+template<typename T>
 Set<T>::Set(Set &another) : Set<T>() {
     *this = another;
 }
 
-template<class T>
+template<typename T>
 Set<T>& Set<T>::operator=(const Set &another) {
     while (!_arr.empty()) {
         pop();
@@ -84,8 +79,8 @@ Set<T>& Set<T>::operator=(const Set &another) {
     return *this;
 }
 
-template<class T>
-T& Set<T>::operator[](const size_t index) {
+template<typename T>
+T& Set<T>::operator[](size_t index) {
     if (index > _arr.size()) {
         throw std::invalid_argument("Set: Invalid index");
     }
@@ -93,25 +88,25 @@ T& Set<T>::operator[](const size_t index) {
     return _arr[index];
 }
 
-template<class T>
-typename T::iterator Set<T>::begin() {
+template<typename T>
+typename Set<T>::iterator Set<T>::begin() const {
     return _arr.begin();
 }
 
-template<class T>
-typename T::iterator Set<T>::end() {
+template<typename T>
+typename Set<T>::iterator Set<T>::end() const {
     return _arr.end();
 }
 
-template<class T>
-void Set<T>::insert(T &elem) {
+template<typename T>
+void Set<T>::insert(T elem) {
     if (find(elem) != _arr.end()) {
         _arr.insert(lower_bound(elem), elem);
     }
 }
 
-template<class T>
-void Set<T>::erase(T &elem) {
+template<typename T>
+void Set<T>::erase(T elem) {
     auto founded = find(elem);
 
     if (founded != _arr.end()) {
@@ -119,18 +114,18 @@ void Set<T>::erase(T &elem) {
     }
 }
 
-template<class T>
+template<typename T>
 size_t Set<T>::size() const {
     return _arr.size();
 }
 
-template<class T>
+template<typename T>
 bool Set<T>::empty() const {
     return _arr.empty();
 }
 
-template<class T>
-typename T::iterator Set<T>::find(const T &key) {
+template<typename T>
+typename Set<T>::iterator Set<T>::find(const T &key) const {
     if (key <= _arr[0] || key >= *_arr.end()) {
         return _arr.end();
     }
@@ -163,8 +158,8 @@ typename T::iterator Set<T>::find(const T &key) {
      return isFound ? _arr.begin() + middle : _arr.end();
 }
 
-template<class T>
-typename T::iterator Set<T>::lower_bound(const T &key) {
+template<typename T>
+typename Set<T>::iterator Set<T>::lower_bound(const T &key) const {
     if (key <= _arr[0]) {
         return 0;
     }
