@@ -62,7 +62,7 @@ Set<T>::Set(std::initializer_list<T> list) : Set<T>() {
 }
 
 template<typename T>
-Set<T>::Set(Set &another) : Set<T>() {
+Set<T>::Set(const Set &another) : Set<T>() {
     *this = another;
 }
 

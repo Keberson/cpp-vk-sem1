@@ -7,7 +7,7 @@
 void fail(const char *message) {
     std::cerr << "Fail:\n";
     std::cerr << message << "\n";
-    std::cout << "-1 bad output\n"; // to get WA
+    std::cout << "-1 bad output\n";  // to get WA
     exit(0);
 }
 
@@ -104,7 +104,12 @@ namespace internal_tests {
 /* check if class correctly works with iterators */
     void check_iterators() {
         std::cerr << "check iterators... ";
-        Set<std::pair<int, int> > s{{-3, 5}, {5, 5}, {-4, 1}, {-4, 4}, {0, 1}, {3, 0}};
+        Set<std::pair<int, int> > s{{-3, 5},
+                                    {5,  5},
+                                    {-4, 1},
+                                    {-4, 4},
+                                    {0,  1},
+                                    {3,  0}};
         if (s.begin()->second != 1 || (++s.begin())->first != -4)
             fail("wrong begin()");
         Set<std::pair<int, int> >::iterator cur = s.end();
@@ -127,19 +132,23 @@ namespace internal_tests {
         std::cerr << "ok!\n";
     }
 
-    struct StrangeInt {
+struct StrangeInt {
         int x;
         static int counter;
+
         StrangeInt() {
             ++counter;
         }
-        StrangeInt(int x): x(x) {
+
+        explicit StrangeInt(int x) : x(x) {
             ++counter;
         }
-        StrangeInt(const StrangeInt& rs): x(rs.x) {
+
+        StrangeInt(const StrangeInt &rs) : x(rs.x) {
             ++counter;
         }
-        bool operator <(const StrangeInt& rs) const {
+
+        bool operator<(const StrangeInt &rs) const {
             return x < rs.x;
         }
 
@@ -151,11 +160,12 @@ namespace internal_tests {
             --counter;
         }
 
-        friend std::ostream& operator <<(std::ostream& out, const StrangeInt& x) {
+        friend std::ostream &operator<<(std::ostream &out, const StrangeInt &x) {
             out << x.x;
             return out;
         }
-    };
+};
+
     int StrangeInt::counter;
 
 /* check if class uses only < for elements comparing */
@@ -225,8 +235,7 @@ namespace internal_tests {
         check_copy_correctness();
         check_destructor();
     }
-}
-
+}  // namespace internal_tests
 
 int main() {
     internal_tests::run_all();

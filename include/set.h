@@ -7,20 +7,21 @@
 
 template<typename T>
 class Set {
-private:
+ private:
     std::list<T> _arr;
 
     void push(T elem);
     T pop();
     void siftUp(size_t index);
     void siftDown(size_t index);
-public:
+
+ public:
     typedef BiIterator<T> iterator;
 
     Set() = default;
     Set(std::initializer_list<T> list);
     Set(BiIterator<T> begin, BiIterator<T> end);
-    Set(Set &another);
+    Set(const Set &another);
 
     Set<T>& operator=(const Set &another);
     T& operator[](size_t index);

@@ -5,9 +5,9 @@
 
 template<typename T>
 class BiIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
-private:
+ private:
     T *_p;
-public:
+ public:
     BiIterator() : _p(nullptr) {}
     explicit BiIterator(T *p) : _p(p) {}
     BiIterator(const BiIterator<T> &it) : _p(it._p) {}
