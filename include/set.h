@@ -90,6 +90,10 @@ void Set<T>::push(T elem) {
 
             current->_prev = tmp;
         }
+    } else {
+        _size--;
+
+        delete tmp;
     }
 }
 
