@@ -228,11 +228,11 @@ typename Set<T>::iterator Set<T>::find(const T &key) const {
 
     size_t l = 0;
     size_t r = size() - 2;
-    size_t mid;
     iterator res;
 
     while (r - l > 1) {
-        mid = (r + l) / 2;
+        size_t mid = (r + l) / 2;
+
         if ((*this)[mid]._val < key) {
             l = mid + 1;
         } else {
