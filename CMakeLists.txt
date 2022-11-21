@@ -17,7 +17,6 @@ add_executable(test_set
 target_link_libraries(test_set ${GTEST_LIBRARIES} pthread)
 target_link_libraries(test_set set)
 
-
 add_executable(extern_test
         tests/externTest.cpp)
 target_link_libraries(test_set set)
