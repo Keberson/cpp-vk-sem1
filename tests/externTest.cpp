@@ -27,7 +27,7 @@ namespace internal_tests {
             fail("incorrect size");
         auto first = s.begin();
         Set<int>::iterator last = s.end();
-        if (*first != -4 || *(--last) != 7)
+        if (*first != -4 || *last != 7)
             fail("incorrect begin or end");
         std::cerr << "ok!\n";
     }
@@ -37,7 +37,7 @@ namespace internal_tests {
     void check_copy_correctness() {
         std::cerr << "check copy... ";
         int elems[] = {3, 3, -1, 6, 0, 0, 17, -5, 4, 2};
-        Set<int> s1(BiIterator<int>(elems), BiIterator<int>(elems + 10));
+        Set<int> s1(elems, elems + 10);
         std::set<int> set_elems(elems, elems + 10);
         Set<int> s2 = s1;
         s2.insert(5);
@@ -67,7 +67,7 @@ namespace internal_tests {
         }
 
 
-        s1 = s1 = s2;
+        s1 = s2;
         s1_it = s1.begin(), s2_it = s2.begin();
         while (s1_it != s1.end() || s2_it != s2.end()) {
             if (*s1_it != *s2_it)
@@ -120,7 +120,6 @@ namespace internal_tests {
             fail("incorrect begin");
         auto begin = s.begin();
         begin++;
-        cur--;
         if (begin == cur)
             fail("wrong == for iterators");
         while (begin != cur) {
@@ -132,7 +131,7 @@ namespace internal_tests {
         std::cerr << "ok!\n";
     }
 
-struct StrangeInt {
+    struct StrangeInt {
         int x;
         static int counter;
 
@@ -140,7 +139,7 @@ struct StrangeInt {
             ++counter;
         }
 
-        explicit StrangeInt(int x) : x(x) {
+        StrangeInt(int x) : x(x) {
             ++counter;
         }
 
@@ -150,6 +149,26 @@ struct StrangeInt {
 
         bool operator<(const StrangeInt &rs) const {
             return x < rs.x;
+        }
+
+        bool operator==(const StrangeInt &rs) const {
+            return x == rs.x;
+        }
+
+        bool operator!=(const StrangeInt &rs) const {
+            return x != rs.x;
+        }
+
+        bool operator<=(const StrangeInt &rs) const {
+            return x <= rs.x;
+        }
+
+        bool operator>(const StrangeInt &rs) const {
+            return x > rs.x;
+        }
+
+        bool operator>=(const StrangeInt &rs) const {
+            return x >= rs.x;
         }
 
         static void init() {
@@ -164,7 +183,7 @@ struct StrangeInt {
             out << x.x;
             return out;
         }
-};
+    };
 
     int StrangeInt::counter;
 
@@ -172,7 +191,7 @@ struct StrangeInt {
     void check_operator_less() {
         std::cerr << "check operator <... ";
 
-        Set<StrangeInt> s{-5, -3, -6, 13, 7, 1000, 963};
+        Set<StrangeInt> s({-5, -3, -6, 13, 7, 1000, 963});
         auto it = s.lower_bound(999);
         ++it;
         if (it != s.end())
