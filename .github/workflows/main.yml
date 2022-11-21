@@ -24,6 +24,11 @@ jobs:
         with:
           name: set
           path: test_set
+      - name: Upload extern test
+          uses: actions/upload-artifact@v2
+          with:
+            name: extern
+            path: extern_test
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
@@ -35,5 +40,6 @@ jobs:
         shell: bash
         run: |
           ls
+          mv artifact/* .
           chmod u+x set/test_set
           ./set/test_set
