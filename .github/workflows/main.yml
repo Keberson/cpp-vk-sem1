@@ -7,24 +7,39 @@ jobs:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
     steps:
-      - uses: actions/checkout@v2 
-      - run: python3 cpplint.py --extensions=cpp src/*.cpp
-      - run: cppcheck --enable=all --suppress=missingIncludeSystem .
+      - uses: actions/checkout@v2
+      - run: python3 cpplint.py --extensions=cpp src/*.cpp include/*.h
+      - run: cppcheck --error-exitcode=1 --enable=all --suppress=missingIncludeSystem src/ tests/testSet.cpp -I include/
   build:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
     needs: [check]
     steps:
-    - uses: actions/checkout@v2 
-    - run: make build
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: matrix_calculator_test
+      - uses: actions/checkout@v2
+      - run: cmake .
+      - run: make
+      - run: ls
+      - name: Upload set
+        uses: actions/upload-artifact@v2
+        with:
+          name: set
+          path: test_set
+      - name: Upload extern test
+        uses: actions/upload-artifact@v2
+        with:
+          name: extern
+          path: extern_test
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
     needs: [build]
     steps:
-      - uses: actions/checkout@v2 
-      - run: cmake . &&  cmake --build . &&  CTEST_OUTPUT_ON_FAILURE=TRUE cmake --build . --target test
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Run tests
+        shell: bash
+        run: |
+          chmod u+x set/test_set
+          chmod u+x extern/extern_test
+          ./set/test_set
+          ./extern/extern_test
