@@ -35,6 +35,5 @@ jobs:
         shell: bash
         run: |
           ls
-          mv artifact/* .
           chmod u+x set/test_set
           ./set/test_set
