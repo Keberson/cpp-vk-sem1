@@ -8,8 +8,8 @@ jobs:
     container: keberson/vk-gcc
     steps:
       - uses: actions/checkout@v2
-      - run: python3 cpplint.py --extensions=cpp src/*.cpp include/*.h tests/*.cpp
-      - run: cppcheck --error-exitcode=1 --enable=all --suppress=missingIncludeSystem src/ tests/ -I include/
+      - run: python3 cpplint.py --extensions=cpp src/*.cpp include/*.h
+      - run: cppcheck --error-exitcode=1 --enable=all --suppress=missingIncludeSystem src/ tests/testSet.cpp -I include/
   build:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc

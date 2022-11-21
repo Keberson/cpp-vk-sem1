@@ -131,7 +131,7 @@ namespace internal_tests {
         std::cerr << "ok!\n";
     }
 
-    struct StrangeInt {
+struct StrangeInt {
         int x;
         static int counter;
 
@@ -183,7 +183,7 @@ namespace internal_tests {
             out << x.x;
             return out;
         }
-    };
+};
 
     int StrangeInt::counter;
 

@@ -11,8 +11,8 @@ class BiIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     Node<T> *_p;
  public:
     BiIterator() : _p(nullptr) {}
-    BiIterator(Node<T> *p) : _p(p) {}
-    BiIterator(Node<T> &p) : _p(&p) {}
+    explicit BiIterator(Node<T> *p) : _p(p) {}
+    explicit BiIterator(Node<T> &p) : _p(&p) {}
     BiIterator(const BiIterator<T> &it) : _p(it._p) {}
 
     bool operator!=(BiIterator<T> const& other) const;

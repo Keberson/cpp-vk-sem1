@@ -19,7 +19,7 @@ class Set {
     typedef BiIterator<T> iterator;
 
     Set(): _begin(nullptr), _end(nullptr), _size(0) {}
-    Set(std::initializer_list<T> list);
+    explicit Set(std::initializer_list<T> list);
     Set(T *begin, T *end);
     Set(const Set &another);
 
@@ -138,11 +138,13 @@ Set<T>& Set<T>::operator=(const Set &another) {
         push((another[i])._val);
     }
 
+    _size = another.size();
+
     return *this;
 }
 
 template<typename T>
-typename Set<T>::node& Set<T>::operator[](size_t index) const{
+typename Set<T>::node& Set<T>::operator[](size_t index) const {
     if (index > size()) {
         throw std::invalid_argument("Set: Invalid index");
     }
@@ -183,7 +185,7 @@ void Set<T>::erase(T elem) {
         if ((*founded) == elem) {
             Node<T> *current = _begin;
 
-            while(current->_val != elem) {
+            while (current->_val != elem) {
                 current = current->_next;
             }
 
