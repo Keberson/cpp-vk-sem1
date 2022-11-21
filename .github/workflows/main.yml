@@ -25,10 +25,10 @@ jobs:
           name: set
           path: test_set
       - name: Upload extern test
-          uses: actions/upload-artifact@v2
-          with:
-            name: extern
-            path: extern_test
+        uses: actions/upload-artifact@v2
+        with:
+          name: extern
+          path: extern_test
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
