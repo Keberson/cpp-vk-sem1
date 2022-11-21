@@ -257,13 +257,27 @@ typename Set<T>::iterator Set<T>::lower_bound(const T &key) const {
         return begin();
     }
 
-    Node<T> *current = _begin;
-
-    while (current != nullptr && current->_val < key) {
-        current = current->_next;
+    if (key >= _end->_val) {
+        return end();
     }
 
-    return current == nullptr ? end() : iterator(current);
+    size_t l = 0;
+    size_t r = size() - 1;
+    size_t mid;
+
+    while (r >= l) {
+        mid = (l + r) / 2;
+
+        if (key < (*this)[mid]._val) {
+            r = mid - 1;
+        } else if (key > (*this)[mid]._val) {
+            l = mid + 1;
+        } else {
+            return iterator((*this)[mid]);
+        }
+    }
+
+    return iterator((*this)[mid + ((*this)[mid]._val >= key ? 0 : + 1)]);
 }
 
 template<typename T>
