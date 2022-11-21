@@ -15,17 +15,17 @@ class BiIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     explicit BiIterator(Node<T> &p) : _p(&p) {}
     BiIterator(const BiIterator<T> &it) : _p(it._p) {}
 
+
     bool operator!=(BiIterator<T> const& other) const;
     bool operator==(BiIterator<T> const& other) const;
 
     T& operator*() const;
+    T* operator->();
 
     BiIterator<T>& operator++();
     BiIterator<T>& operator--();
     const BiIterator<T> operator++(int);
     const BiIterator<T> operator--(int);
-
-    T* operator->();
 };
 
 template<typename T>

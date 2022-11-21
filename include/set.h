@@ -226,13 +226,29 @@ typename Set<T>::iterator Set<T>::find(const T &key) const {
         return end();
     }
 
-    Node<T> *current = _begin;
+    size_t l = 0;
+    size_t r = size() - 2;
+    size_t mid;
+    iterator res;
 
-    while (current != nullptr && current->_val != key) {
-        current = current->_next;
+    while (r - l > 1) {
+        mid = (r + l) / 2;
+        if ((*this)[mid]._val < key) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
     }
 
-    return current == nullptr ? end() : iterator(current);
+    if ((*this)[l]._val == key) {
+        res = iterator((*this)[l]);
+    } else if ((*this)[r]._val == key) {
+        res = iterator((*this)[r]);
+    } else {
+        res = end();
+    }
+
+    return res;
 }
 
 template<typename T>
