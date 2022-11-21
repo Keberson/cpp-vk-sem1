@@ -26,6 +26,8 @@ class BiIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     BiIterator<T>& operator--();
     const BiIterator<T> operator++(int);
     const BiIterator<T> operator--(int);
+
+    Node<T>* getNode() const;
 };
 
 template<typename T>
@@ -82,6 +84,11 @@ const BiIterator<T> BiIterator<T>::operator--(int) {
     --(*this);
 
     return temp;
+}
+
+template<typename T>
+Node<T>* BiIterator<T>::getNode() const {
+    return _p;
 }
 
 #endif  // INCLUDE_ITERATOR_H_

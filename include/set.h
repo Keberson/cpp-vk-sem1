@@ -63,12 +63,8 @@ void Set<T>::push(T elem) {
 
         _begin->_next = _end;
         _end->_prev = _begin;
-    } else if (find(elem) == end()) {
-        Node<T> *current = _begin;
-
-        while (current->_next != nullptr && current->_val < tmp->_val) {
-            current = current->_next;
-        }
+    } else if (*find(elem) != elem) {
+        auto current = lower_bound(elem).getNode();
 
         if (current->_next == nullptr) {
             if (current->_val > tmp->_val) {
@@ -183,11 +179,7 @@ void Set<T>::erase(T elem) {
         auto founded = find(elem);
 
         if ((*founded) == elem) {
-            Node<T> *current = _begin;
-
-            while (current->_val != elem) {
-                current = current->_next;
-            }
+            auto current = founded.getNode();
 
             if (current->_prev != nullptr) {
                 current->_prev->_next = current->_next;
