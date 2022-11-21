@@ -24,10 +24,6 @@ jobs:
         with:
           name: set
           path: test_set
-      - name: Upload set library
-        uses: actions/upload-artifact@v2
-        with:
-          path: libset.so
   test:
     runs-on: ubuntu-latest
     container: keberson/vk-gcc
@@ -38,6 +34,7 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
+          ls
           mv artifact/* .
           chmod u+x set/test_set
           ./set/test_set
